@@ -1,7 +1,8 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <HTML lang="en">
 	<head>
 		<meta charset="utf-8"/>
+		<link type="text/css" href="style.css" rel="stylesheet" />
 		<title>Data Design Project</title>
 	</head>
 	<body>
@@ -35,6 +36,10 @@
 			<li>The site saves comment and displays it in the thread.</li>
 		</ol>
 		<h2>Conceptual Model</h2>
+		<ul>
+			<li>One user can post many times.</li>
+			<li>Many users can comment on many posts.</li>
+		</ul>
 		<p></p>
 	</body>
 </HTML>
