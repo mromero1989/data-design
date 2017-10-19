@@ -33,6 +33,9 @@
 			<li>The site saves comment and displays it in the thread.</li>
 		</ol>
 		<h2>Conceptual Model</h2>
+		<h2>
+			<img src="php/images/erd_ddp.svg" alt="Kiwi standing on oval">
+		</h2>
 		<h2>Profile</h2>
 		<ul>
 			<li>profileId</li>
