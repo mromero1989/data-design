@@ -50,6 +50,12 @@
 			<li>commentContent</li>
 			<li>commentDate</li>
 		</ul>
+		<h2>Post</h2>
+		<ul>
+			<li>postProfileId</li>
+			<li>postCommentId</li>
+			<li>postDate</li>
+		</ul>
 		<h2>Relations</h2>
 		<ul>
 			<li>One user can post many times.(1-n)</li>

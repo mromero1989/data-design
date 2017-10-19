@@ -21,3 +21,13 @@ CREATE TABLE comment (
 	PRIMARY KEY(commentId)
 );
 
+CREATE TABLE 'post' (
+	postProfileId BINARY(16) NOT NULL,
+	postCommentId BINARY(16) NOT NULL,
+	postDate DATETIME(6) NOT NULL,
+	INDEX(postprofileId),
+	INDEX(postCommentId),
+	FOREIGN KEY(postProfileId) REFERENCES profile(profileId),
+	FOREIGN KEY(postCommentId) REFERENCES comment(commentId),
+	PRIMARY KEY(postProfileId, postCommentId)
+);
