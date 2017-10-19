@@ -33,9 +33,7 @@
 			<li>The site saves comment and displays it in the thread.</li>
 		</ol>
 		<h2>Conceptual Model</h2>
-		<h2>
 			<img src="php/images/erd_ddp.svg" alt="Kiwi standing on oval">
-		</h2>
 		<h2>Profile</h2>
 		<ul>
 			<li>profileId</li>
@@ -46,18 +44,18 @@
 			<li>profilePhone</li>
 			<li>profileSalt</li>
 		</ul>
+		<h2>Post</h2>
+		<ul>
+			<li>postProfileId</li>
+			<li>postCommentId</li>
+			<li>postDate</li>
+		</ul>
 		<h2>Comment</h2>
 		<ul>
 			<li>commentId</li>
 			<li>commentProfileId</li>
 			<li>commentContent</li>
 			<li>commentDate</li>
-		</ul>
-		<h2>Post</h2>
-		<ul>
-			<li>postProfileId</li>
-			<li>postCommentId</li>
-			<li>postDate</li>
 		</ul>
 		<h2>Relations</h2>
 		<ul>
