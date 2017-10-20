@@ -1,3 +1,9 @@
+ALTER DATABASE mromero308 CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS comment;
+DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS profile;
+
 CREATE TABLE profile (
 	profileId              BINARY(16)   NOT NULL,
 	profileActivationToken CHAR(32),
@@ -9,7 +15,7 @@ CREATE TABLE profile (
 	UNIQUE (profileEmail),
 	UNIQUE (profileAtHandle),
 	PRIMARY KEY (profileId)
-);
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 CREATE TABLE post (
 	postId        BINARY(16)   NOT NULL,
@@ -19,7 +25,7 @@ CREATE TABLE post (
 	INDEX (postProfileId),
 	FOREIGN KEY (postProfileId) REFERENCES profile (profileId),
 	PRIMARY KEY (postId)
-);
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 CREATE TABLE comment (
 	commentProfileId BINARY(16)  NOT NULL,
@@ -30,6 +36,4 @@ CREATE TABLE comment (
 	FOREIGN KEY (commentProfileId) REFERENCES profile (profileId),
 	FOREIGN KEY (commentPostId) REFERENCES post (postId),
 	PRIMARY KEY (commentProfileId, commentPostId)
-);
-
-
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;

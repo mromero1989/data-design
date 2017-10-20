@@ -46,15 +46,15 @@
 		</ul>
 		<h2>Post</h2>
 		<ul>
+			<li>postId</li>
 			<li>postProfileId</li>
-			<li>postCommentId</li>
+			<li>postContent</li>
 			<li>postDate</li>
 		</ul>
 		<h2>Comment</h2>
 		<ul>
-			<li>commentId</li>
 			<li>commentProfileId</li>
-			<li>commentContent</li>
+			<li>commentPostId</li>
 			<li>commentDate</li>
 		</ul>
 		<h2>Relations</h2>
