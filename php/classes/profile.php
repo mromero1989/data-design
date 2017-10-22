@@ -86,6 +86,35 @@ public function __construct($newProfileId, ?string $newProfileActivationToken, s
 		}
 }
 
+/**
+ * accessor method for profile id
+ *
+ * @return Uuid value of profile id
+ */
+
+public function getProfileId() : Uuid {
+	return ($this->profileId);
+}
+
+/**
+ * mutator method profile id
+ *
+ * @param Uuid/string $newProfileId new value of profile Id
+ * @throws \TypeError if $newProfileId is not Uuid
+ */
+
+public function setProfileId($newProfileId) : void {
+		try {
+				$uuid = self::validateUuid($newProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+				$exceptionType = get_class($exception);
+				throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		// convert and store the profile id
+}
+
 
 }
+
+
 
