@@ -113,7 +113,35 @@ public function setProfileId($newProfileId) : void {
 		// convert and store the profile id
 }
 
+	/**
+	 * accessor method for profile activation token
+	 *
+	 * @return string value of the activation token
+	 */
+	public function getProfileActivationToken() : ?string {
+		return ($this->getProfileActivationToken);
+	}
 
+	/**
+	 * mutator method for profile activation token
+	 *
+	 * @param string $newProfileActivationToken
+	 * @throws \InvalidArgumentException if the token is not a string or insecure
+	 * @throws \RangeException if the token is not exactly 32 characters
+	 * @throws \TypeError if the activation token is not a string
+	 */
+
+	public function setProfileActivationToken(?string $newProfileActivationToken) : void {
+		if($newProfileActivationToken === null) {
+			$this->profileActivationToken = null;
+			return;
+		}
+		$newProfileActivationToken = strtolower(trim($newProfileActivationToken));
+		if(ctype_xdigit($newProfileActivationToken) === false) {
+			throw(new\RangeException("profile activation token has to be 32"));
+		}
+		$this->profileActivationToken = $newProfileActivationToken;
+}
 }
 
 
