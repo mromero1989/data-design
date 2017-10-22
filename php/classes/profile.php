@@ -142,6 +142,74 @@ public function setProfileId($newProfileId) : void {
 		}
 		$this->profileActivationToken = $newProfileActivationToken;
 }
+
+/*
+ * accessor method for profile handle
+ *
+ * @return string value of profile handle
+ */
+
+public function getProfileAtHandle() : string {
+		return ($this->profileAtHandle);
+}
+
+	/**
+	 * mutator method for user name
+	 *
+	 * @param string $newProfileAtHandle new value of user name
+	 * @throws \InvalidArgumentException if $newProfileAtHandle is not a string or insecure
+	 * @throws \RangeException if $newProfileAtHandle is > 140 characters
+	 * @throws \TypeError if $newProfileAtHandle is not a string
+	 */
+
+public function setProfileAtHandle(string $newProfileAtHandle) : void {
+		// verify the profile handle is secure
+		$newProfileAtHandle = trim($newProfileAtHandle);
+		$newProfileAtHandle = filter_var($newProfileAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfileAtHandle) === true) {
+				throw(new \InvalidArgumentException("profile handle is empty or insecure"));
+		}
+		// verify the profile handle will fit in the database
+		if(strlen($newProfileAtHandle) > 140) {
+			throw(new \RangeException("Profile Handle is too large"));
+		}
+		// store the profile handle
+		$this->profileAtHandle = $newProfileAtHandle;
+}
+
+/**
+ * Accessor method for email
+ *
+ * @return string value of email
+ */
+
+public function getProfileEmail() : string{
+		return $this->profileEmail;
+}
+
+/**
+ * mutator method for email
+ *
+ * @param string $newProfileEmail new value of email
+ * @throws \InvalidArgumentException if $newProfileEmail is not valid email or insecure
+ * @throws \RangeException if $newProfileEmail is > 128 characters
+ * @throws \TypeError if $newProfileEmail is not a string
+ */
+
+public function setProfileEmail(string $newProfileEmail) : void {
+		// verify the email is secure
+		$newProfileEmail = trim($newProfileEmail);
+		$newProfileEmail = filter_var($newProfileEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($newProfileEmail) === true) {
+			throw(new \InvalidArgumentException("profile email is empty or insecure"));
+		}
+		// verify the email will fit in the database
+		if(strlen($newProfileEmail) > 128) {
+			throw(new \RangeException("Profile email is too large"));
+		}
+		// store the email
+		$this->profileEmail = $newProfileEmail;
+}
 }
 
 
