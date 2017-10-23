@@ -247,7 +247,72 @@ public function getProfileHash() : string {
 		// store the hash
 		$this->profileHash = $newProfileHash;
 	}
+	/**
+	 * accessor method for profile phone
+	 *
+	 * @return string value of profile phone
+	 */
 
+	public function getProfilePhone() : string {
+		return ($this->profilePhone);
+	}
+
+	/**
+	 * mutator method for profile phone
+	 *
+	 * @param string $newProfilePhone new value of handle
+	 * @throws \InvalidArgumentException if $newProfilePhone is not a string or insecure
+	 * @throws \RangeException if $newProfilePhone is > 128 characters
+	 * @throws \TypeError if $newProfilePhone is not a string
+	 **/
+	public function setProfilePhone(string $newProfilePhone) : void {
+		// verify the phone is secure
+		$newProfilePhone = trim($newProfilePhone);
+		$newProfilePhone = filter_var($newProfilePhone, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfilePhone) === true) {
+			throw(new \InvalidArgumentException("Profile phone is empty or insecure"));
+		}
+		// verify the phone will fit in the database
+		if(strlen($newProfilePhone) > 128) {
+			throw(new \RangeException("profile phone is too large"));
+		}
+		// store the profile phone
+		$this->profilePhone = $newProfilePhone;
+	}
+
+	/**
+	 * Accessor method for profile salt
+	 *
+	 * @return string value of profile salt
+	 **/
+	public function getProfileSalt() : string {
+		return $this->profileSalt;
+	}
+
+	/**
+	 * mutator method for profile salt
+	 *
+	 * @param string $newProfileSalt new value of profile salt
+	 * @throws \InvalidArgumentException if $newProfileSalt is not a string or insecure
+	 * @throws \RangeException if the salt is not 64 characters
+	 * @throws \TypeError if $newProfileSalt is not a string
+	 **/
+
+	public function setProfileSalt(string $newProfileSalt) : void {
+		//verify the salt is formatted
+		$newProfileSalt = trim($newProfileSalt);
+		$newProfileSalt = strtolower($newProfileSalt);
+		//verify the string is in hexadecimal
+		if(!ctype_xdigit($newProfileSalt)) {
+			throw(new \InvalidArgumentException("Profile hash is empty or insecure"));
+		}
+		//verify the salt is 64 characters.
+		if(strlen($newProfileSalt) !== 64) {
+			throw(new \RangeException("Profile salt must be 64 characters"));
+		}
+		//store the salt
+		$this->profileSalt = $newProfileSalt;
+	}
 }
 
 
