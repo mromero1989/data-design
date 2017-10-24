@@ -68,7 +68,7 @@ class Profile implements \JsonSerialize {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-public function __construct($newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, string $newProfilePhone, string $newProfileSalt)
+public function __construct(uuid $newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, ?string $newProfileHash, string $newProfilePhone, ?string $newProfileSalt)
 {
 		try {
 				$this ->setProfileId($newProfileId);
@@ -77,7 +77,7 @@ public function __construct($newProfileId, ?string $newProfileActivationToken, s
 				$this ->setProfileEmail($newProfileEmail);
 				$this ->setProfileHash($newProfileHash);
 				$this ->setProfilePhone($newProfilePhone);
-				$this ->setProfileSalt($newProfileSalt);)
+				$this ->setProfileSalt($newProfileSalt);
 		}
 		//determine which exception type was thrown
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -312,6 +312,25 @@ public function getProfileHash() : string {
 		}
 		//store the salt
 		$this->profileSalt = $newProfileSalt;
+	}
+
+	/**
+	 * Inserts this profile into mySQL
+	 *
+	 * @param \PDO $PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+
+	public function insert (\PDP $pdo) : void {
+		// create query template
+		$query = "INSERT INTO profile(profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES(:profileId, :profileActivationToken, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
+
+		$statement = $pdo->prepare($query);
+
+		//bind the member variables to the place holders in the template
+		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
+		$statement->executed($parameters);
 	}
 }
 
