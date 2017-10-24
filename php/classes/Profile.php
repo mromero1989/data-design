@@ -68,57 +68,55 @@ class Profile implements \JsonSerialize {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-public function __construct(uuid $newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, ?string $newProfileHash, string $newProfilePhone, ?string $newProfileSalt)
-{
+	public function __construct(uuid $newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, ?string $newProfileHash, string $newProfilePhone, ?string $newProfileSalt) {
 		try {
-				$this ->setProfileId($newProfileId);
-				$this ->setProfileActivationToken($newProfileActivationToken);
-				$this ->setProfileAtHandle($newProfileAtHandle);
-				$this ->setProfileEmail($newProfileEmail);
-				$this ->setProfileHash($newProfileHash);
-				$this ->setProfilePhone($newProfilePhone);
-				$this ->setProfileSalt($newProfileSalt);
-		}
-		//determine which exception type was thrown
+			$this->setProfileId($newProfileId);
+			$this->setProfileActivationToken($newProfileActivationToken);
+			$this->setProfileAtHandle($newProfileAtHandle);
+			$this->setProfileEmail($newProfileEmail);
+			$this->setProfileHash($newProfileHash);
+			$this->setProfilePhone($newProfilePhone);
+			$this->setProfileSalt($newProfileSalt);
+		} //determine which exception type was thrown
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-}
+	}
 
-/**
- * accessor method for profile id
- *
- * @return Uuid value of profile id
- */
+	/**
+	 * accessor method for profile id
+	 *
+	 * @return Uuid value of profile id
+	 */
 
-public function getProfileId() : Uuid {
-	return ($this->profileId);
-}
+	public function getProfileId(): Uuid {
+		return ($this->profileId);
+	}
 
-/**
- * mutator method profile id
- *
- * @param Uuid/string $newProfileId new value of profile Id
- * @throws \TypeError if $newProfileId is not Uuid
- */
+	/**
+	 * mutator method profile id
+	 *
+	 * @param Uuid /string $newProfileId new value of profile Id
+	 * @throws \TypeError if $newProfileId is not Uuid
+	 */
 
-public function setProfileId($newProfileId) : void {
+	public function setProfileId($newProfileId): void {
 		try {
-				$uuid = self::validateUuid($newProfileId);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
-				$exceptionType = get_class($exception);
-				throw(new $exceptionType($exception->getMessage(), 0, $exception));
+			$uuid = self::validateUuid($newProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 		// convert and store the profile id
-}
+	}
 
 	/**
 	 * accessor method for profile activation token
 	 *
 	 * @return string value of the activation token
 	 */
-	public function getProfileActivationToken() : ?string {
+	public function getProfileActivationToken(): ?string {
 		return ($this->getProfileActivationToken);
 	}
 
@@ -131,7 +129,7 @@ public function setProfileId($newProfileId) : void {
 	 * @throws \TypeError if the activation token is not a string
 	 */
 
-	public function setProfileActivationToken(?string $newProfileActivationToken) : void {
+	public function setProfileActivationToken(?string $newProfileActivationToken): void {
 		if($newProfileActivationToken === null) {
 			$this->profileActivationToken = null;
 			return;
@@ -141,17 +139,17 @@ public function setProfileId($newProfileId) : void {
 			throw(new\RangeException("profile activation token has to be 32"));
 		}
 		$this->profileActivationToken = $newProfileActivationToken;
-}
+	}
 
-/*
- * accessor method for profile handle
- *
- * @return string value of profile handle
- */
+	/*
+	 * accessor method for profile handle
+	 *
+	 * @return string value of profile handle
+	 */
 
-public function getProfileAtHandle() : string {
+	public function getProfileAtHandle(): string {
 		return ($this->profileAtHandle);
-}
+	}
 
 	/**
 	 * mutator method for user name
@@ -162,12 +160,12 @@ public function getProfileAtHandle() : string {
 	 * @throws \TypeError if $newProfileAtHandle is not a string
 	 */
 
-public function setProfileAtHandle(string $newProfileAtHandle) : void {
+	public function setProfileAtHandle(string $newProfileAtHandle): void {
 		// verify the profile handle is secure
 		$newProfileAtHandle = trim($newProfileAtHandle);
 		$newProfileAtHandle = filter_var($newProfileAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newProfileAtHandle) === true) {
-				throw(new \InvalidArgumentException("profile handle is empty or insecure"));
+			throw(new \InvalidArgumentException("profile handle is empty or insecure"));
 		}
 		// verify the profile handle will fit in the database
 		if(strlen($newProfileAtHandle) > 140) {
@@ -175,28 +173,28 @@ public function setProfileAtHandle(string $newProfileAtHandle) : void {
 		}
 		// store the profile handle
 		$this->profileAtHandle = $newProfileAtHandle;
-}
+	}
 
-/**
- * Accessor method for email
- *
- * @return string value of email
- */
+	/**
+	 * Accessor method for email
+	 *
+	 * @return string value of email
+	 */
 
-public function getProfileEmail() : string{
+	public function getProfileEmail(): string {
 		return $this->profileEmail;
-}
+	}
 
-/**
- * mutator method for email
- *
- * @param string $newProfileEmail new value of email
- * @throws \InvalidArgumentException if $newProfileEmail is not valid email or insecure
- * @throws \RangeException if $newProfileEmail is > 128 characters
- * @throws \TypeError if $newProfileEmail is not a string
- */
+	/**
+	 * mutator method for email
+	 *
+	 * @param string $newProfileEmail new value of email
+	 * @throws \InvalidArgumentException if $newProfileEmail is not valid email or insecure
+	 * @throws \RangeException if $newProfileEmail is > 128 characters
+	 * @throws \TypeError if $newProfileEmail is not a string
+	 */
 
-public function setProfileEmail(string $newProfileEmail) : void {
+	public function setProfileEmail(string $newProfileEmail): void {
 		// verify the email is secure
 		$newProfileEmail = trim($newProfileEmail);
 		$newProfileEmail = filter_var($newProfileEmail, FILTER_VALIDATE_EMAIL);
@@ -209,16 +207,16 @@ public function setProfileEmail(string $newProfileEmail) : void {
 		}
 		// store the email
 		$this->profileEmail = $newProfileEmail;
-}
+	}
 
-/**
- * accessor method for profile hash
- *
- * @return string value of hash
- */
-public function getProfileHash() : string {
+	/**
+	 * accessor method for profile hash
+	 *
+	 * @return string value of hash
+	 */
+	public function getProfileHash(): string {
 		return $this->profileHash;
-}
+	}
 
 	/**
 	 * mutator method for profile hash password
@@ -229,7 +227,7 @@ public function getProfileHash() : string {
 	 * @throws \TypeError if profile hash is not a string
 	 **/
 
-	public function setProfileHash(string $newProfileHash) : void {
+	public function setProfileHash(string $newProfileHash): void {
 		// enforce that the hash is properly formatted
 		$newProfileHash = trim($newProfileHash);
 		$newProfileHash = strtolower($newProfileHash);
@@ -247,13 +245,14 @@ public function getProfileHash() : string {
 		// store the hash
 		$this->profileHash = $newProfileHash;
 	}
+
 	/**
 	 * accessor method for profile phone
 	 *
 	 * @return string value of profile phone
 	 */
 
-	public function getProfilePhone() : string {
+	public function getProfilePhone(): string {
 		return ($this->profilePhone);
 	}
 
@@ -265,7 +264,7 @@ public function getProfileHash() : string {
 	 * @throws \RangeException if $newProfilePhone is > 128 characters
 	 * @throws \TypeError if $newProfilePhone is not a string
 	 **/
-	public function setProfilePhone(string $newProfilePhone) : void {
+	public function setProfilePhone(string $newProfilePhone): void {
 		// verify the phone is secure
 		$newProfilePhone = trim($newProfilePhone);
 		$newProfilePhone = filter_var($newProfilePhone, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -285,7 +284,7 @@ public function getProfileHash() : string {
 	 *
 	 * @return string value of profile salt
 	 **/
-	public function getProfileSalt() : string {
+	public function getProfileSalt(): string {
 		return $this->profileSalt;
 	}
 
@@ -298,7 +297,7 @@ public function getProfileHash() : string {
 	 * @throws \TypeError if $newProfileSalt is not a string
 	 **/
 
-	public function setProfileSalt(string $newProfileSalt) : void {
+	public function setProfileSalt(string $newProfileSalt): void {
 		//verify the salt is formatted
 		$newProfileSalt = trim($newProfileSalt);
 		$newProfileSalt = strtolower($newProfileSalt);
@@ -322,14 +321,14 @@ public function getProfileHash() : string {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 */
 
-	public function insert (\PDP $pdo) : void {
+	public function insert(\PDP $pdo): void {
 		// create query template
-		$query = "INSERT INTO profile(profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt) VALUES(:profileId, :profileActivationToken, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, :profileSalt)";
+		$query = "INSERT INTO profile(profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, 		profileSalt) VALUES(:profileId, :profileActivationToken, :profileAtHandle, :profileEmail, :profileHash, :profilePhone, 		:profileSalt)";
 
 		$statement = $pdo->prepare($query);
 
 		//bind the member variables to the place holders in the template
-		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
+		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, 		"profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, 		"profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
 		$statement->executed($parameters);
 	}
 
@@ -340,7 +339,7 @@ public function getProfileHash() : string {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function delete(\PDO $pdo) : void {
+	public function delete(\PDO $pdo): void {
 
 		// create query template
 		$query = "DELETE FROM profile WHERE profileId = :profileId";
@@ -351,8 +350,62 @@ public function getProfileHash() : string {
 		$statement->execute($parameters);
 	}
 
+	/**
+	 * updates this Profile in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo): void {
 
+		// create query template
+		$query = "UPDATE profile SET profileId = :profileId, profileActivationToken = :profileActivationToken, profileAtHandle = 		:profileAtHandle, profileEmail = :profileEmail, profileHash = :profileHash, profilePhone = :profilePhone, profileSalt = 		:profileSalt WHERE profileId = :profileId";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, 		"profileAtHandle" => $this->profileAtHandle, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, 		"profilePhone" => $this->profilePhone, "profileSalt" => $this->profileSalt];
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * gets the Profile by profileId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $profileId profile id to search for
+	 * @return Profile|null Profile found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getProfileByProfileId(\PDO $pdo, $profileId): ?Profile {
+		// sanitize the profileID before searching
+		try {
+			$profileId = self::validateUuid($profileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM 		profile WHERE profileId = :profileId";
+		$statement = $pdo->prepare($query);
+
+		// bind the tweet id to the place holder in the template
+		$parameters = ["profileId" => $profileId->getBytes()];
+		$statement->execute($parameters);
+
+		// grab the tweet from mySQL
+		try {
+		$profile = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if($row !== false) {
+		$profile = new profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], 		$row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
 }
-
+} catch(\Exception $exception) {
+	// if the row couldn't be converted, rethrow it
+	throw(new \PDOException($exception->getMessage(), 0, $exception));
+}
+		return($profile);
+	}
+}
 
 
