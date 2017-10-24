@@ -15,7 +15,7 @@ use Ramsey\Uuid\Uuid;
  * @version 7.1
  **/
 
-class profile implements \JsonSerializable {
+class Profile implements \JsonSerialize {
 	use ValidateDate;
 	use ValidateUuid;
 	/**
@@ -68,7 +68,7 @@ class profile implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-public function __construct($newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail)
+public function __construct($newProfileId, ?string $newProfileActivationToken, string $newProfileAtHandle, string $newProfileEmail, string $newProfileHash, string $newProfilePhone, string $newProfileSalt)
 {
 		try {
 				$this ->setProfileId($newProfileId);
