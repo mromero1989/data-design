@@ -109,6 +109,7 @@ class Profile implements \JsonSerialize {
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 		// convert and store the profile id
+		$this->profileId = $uuid;
 	}
 
 	/**
@@ -379,9 +380,9 @@ class Profile implements \JsonSerialize {
 	public static function getProfileByProfileId(\PDO $pdo, $profileId): ?Profile {
 		// sanitize the profileID before searching
 		try {
-			$profileId = self::validateUuid($profileId);
+				$profileId = self::validateUuid($profileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
@@ -394,18 +395,97 @@ class Profile implements \JsonSerialize {
 
 		// grab the tweet from mySQL
 		try {
-		$profile = null;
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		$row = $statement->fetch();
-		if($row !== false) {
-		$profile = new profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], 		$row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
-}
-} catch(\Exception $exception) {
-	// if the row couldn't be converted, rethrow it
-	throw(new \PDOException($exception->getMessage(), 0, $exception));
-}
+			$profile = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$profile = new profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], 				$row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
+			}
+		}
+		catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
 		return($profile);
 	}
-}
+
+	/**
+	 * gets the Profile by profile Activation Token
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $profileActivationToken
+	 * @return Profile|null profile found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getProfileByProfileActivationToken(\PDO $pdo, string $profileActivationToken) : ?Profile {
+		// sanitize the profile activation token before searching
+		try {
+			$profileActivationToken = self::validateUuid($profileActivationToken);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileActivationToken = :profileActivationToken";
+		$statement = $pdo->prepare($query);
+
+		// bind the profile activation token to the place holder in the template
+		$parameters = ["profileActivationToken" => $profileActivationToken];
+		$statement->execute($parameters);
+
+		// grab the profile from mySQL
+		try {
+			$profile = null;
+			$statement-> setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
+			}
+		}
+		catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($profile);
+	}
+
+	/**
+	 * gets the Profile by profile at handle
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $profileAthandle handle to search for
+	 * @return \SPLFixedArray of all profiles found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not correct data type
+	 **/
+	public static function getProfileByProfileAtHandle(\PDO $pdo, string $profileAtHandle) : \SPLFixedArray {
+		// sanitize the handle before searching
+		$profileAtHandle = trim($profileAtHandle);
+		$profileAtHandle = filter_var($profileAtHandle, FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($profileAtHandle) === true) {
+			throw(new \PDOException("not a valid handle"));
+		}
+		// create query template
+		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profileSalt FROM profile WHERE profileAtHandle = :profileAtHandle";
+		$statement = $pdo->prepare($query);
+		//bind the profile handle to the place holder in the template
+		$parameters = ["profileAtHandle" => $profileAtHandle];
+		$statement->execute($parameters);
+		$profiles = new \SPLFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while (($row = $statement->fetch()) !== false) {
+			try {
+				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], $row["profilePhone"], $row["profileHash"], $row["profileSalt"]);
+				$profiles[$profiles->key()] = $profile;
+				$profiles->next();
+			} catch (\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($profiles);
+	}
+	}
 
 
