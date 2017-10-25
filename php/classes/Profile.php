@@ -467,7 +467,7 @@ class Profile implements \JsonSerialize {
 			throw(new \PDOException("not a valid handle"));
 		}
 		// create query template
-		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profileSalt FROM profile WHERE profileAtHandle = :profileAtHandle";
+		$query = "SELECT profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileAtHandle = :profileAtHandle";
 		$statement = $pdo->prepare($query);
 		//bind the profile handle to the place holder in the template
 		$parameters = ["profileAtHandle" => $profileAtHandle];
@@ -476,7 +476,7 @@ class Profile implements \JsonSerialize {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while (($row = $statement->fetch()) !== false) {
 			try {
-				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], $row["profilePhone"], $row["profileHash"], $row["profileSalt"]);
+				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
 				$profiles[$profiles->key()] = $profile;
 				$profiles->next();
 			} catch (\Exception $exception) {
@@ -486,6 +486,56 @@ class Profile implements \JsonSerialize {
 		}
 		return($profiles);
 	}
+
+	/**
+	 * gets the profile by profile email
+	 *
+	 * @param \PDO $pdo pdo PDO connection object
+	 * @param string $profileEmail profile email to search for
+	 * @return Profile|null Profile or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 */
+	public static function getProfileByProfileEmail(\PDO $pdo, string $profileEmail) : ?Profile {
+		//sanitize email before searching
+		$profileEmail = trim($profileEmail);
+		$profileEmail = filter_var($profileEmail, FILTER_SANITIZE_EMAIL);
+		if(empty($profileEmail) === true) {
+			throw(new \InvalidArgumentException("profile email is empty or insecure"));
+		}
+		//create query template
+		$query="SELECT profileId, profileActivationToken, profileAtHandle, profileEmail, profileHash, profilePhone, profileSalt FROM profile WHERE profileEmail = :profileEmail";
+		$statement=$pdo->prepare($query);
+		//bind the profile email to the place holder in the template
+		$parameters=["profileEmail"=>$profileEmail];
+		$statement->execute($parameters);
+		//grab the Profile from mySQL
+		try {
+			$profile = null;
+			$statement-> setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAtHandle"], $row["profileEmail"], $row["profileHash"], $row["profilePhone"], $row["profileSalt"]);
+			}
+		}
+		catch(\Exception $exception) {
+			//if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($profile);
 	}
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() {
+		$fields = get_object_vars($this);
+
+		$fields["profileId"] = $this->profileId->toString();
+		return($fields);
+	}
+
+}
 
 
